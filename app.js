@@ -1,8 +1,12 @@
-
 const data = window.APP_DATA;
-const totalGeneral = window.TOTAL_GENERAL;
 const gs = new Intl.NumberFormat('es-PY');
 const fmtGs = (n) => `Gs. ${gs.format(Number(n || 0))}`;
+
+// TOTAL GENERAL AUTOMÁTICO
+const totalGeneral = data.categorias.reduce((acc, cat) => {
+  const totalCat = cat.items.reduce((sum, item) => sum + Number(item[2] || 0), 0);
+  return acc + totalCat;
+}, 0);
 
 document.getElementById('totalGeneral').textContent = fmtGs(totalGeneral);
 
@@ -13,7 +17,8 @@ const tfootTotal = document.getElementById('tfootTotal');
 let generalRows = "";
 
 cards.innerHTML = data.categorias.map(cat => {
-  const total = cat.items.reduce((a,b) => a + b[2], 0);
+  const total = cat.items.reduce((a, b) => a + Number(b[2] || 0), 0);
+
   const rows = cat.items.map(item => {
     generalRows += `
       <tr>
@@ -24,6 +29,7 @@ cards.innerHTML = data.categorias.map(cat => {
         <td>${item[3] ? `<img src="${item[3]}" class="thumb" onclick="verImagen('${item[3]}')">` : ""}</td>
       </tr>
     `;
+
     return `
       <tr>
         <td>${item[0]}</td>
