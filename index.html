@@ -7,6 +7,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .resumen-adelantos {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .resumen-adelantos h4 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #0f172a;
+    }
+
+    .resumen-adelantos .resumen-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    .resumen-adelantos .resumen-item:last-child {
+      border-bottom: 0;
+    }
+
+    .resumen-adelantos strong {
+      white-space: nowrap;
+      color: #0f172a;
+    }
+  </style>
 </head>
 <body>
   <main class="container">
@@ -65,11 +99,14 @@
           "nombre": "Adelantos mes de abril",
           "color": "azul",
           "items": [
-            ["01/04/2026", "Yessica Araceli López / Efectivo ya fue descontado el 07/04/2026",100000 , "img/yess.jpg"],
             ["11/04/2026", "Robert Leckie", 100000, "img/valeR.jpg"],
             ["13/04/2026", "Robert Leckie / Pago semanal", 500000, "img/movi.jpg"],
             ["17/04/2026", "Vale Cristhian Alcaraz", 400000, "img/vale.jpg"],
-            ["20/04/2026", "Robert Leckie / Pago semanal", 250000, "img/semanal.jpg"]
+            ["20/04/2026", "Robert Leckie / Pago semanal", 250000, "img/semanal.jpg"],
+            ["24/04/2026", "Vale Cristhian Alcaraz", 300000, "img/042.jpg"],
+            ["27/04/2026", "Vale Robert Leckie", 500000, "img/0052.jpg"],
+            ["28/04/2026", "Vale Yessica Araceli López", 300000, ""],
+            ["28/04/2026", "Vale Yessica Araceli López", 100000, "img/00010.jpg"]
           ]
         },
         {
@@ -100,7 +137,8 @@
             ["17/04/2026", "Compra de instalación de equipos", 1324636,"img/insta.jpg"],
             ["17/04/2026", "Roberto Ruiz Diaz TV", 400000,""],
             ["17/04/2026", "Equipos para instalación", 176275,"img/imcomp.jpg"],
-            
+            ["22/04/2026", "Yerba Grande", 13500,"img/on.jpg"],
+            ["28/04/2026", "Alquiler Valenzuela", 1200000,"img/0061.jpg"]
           ]
         },
         {
@@ -126,6 +164,7 @@
             ["08/04/2026", "Freno", 450000, "img/compro (2).jpg"],
             ["15/04/2026", "Gomería", 30000,""],
             ["18/04/2026", "Mantenimiento movil 3", 1000000,"img/combpp.jpg"],
+            ["22/04/2026", "Cambio de correa dentada y soporte motor", 800000,"img/007.jpg"]
           ]
         },
         {
@@ -162,7 +201,13 @@
             ["18/04/2026", "Móvil 3", 100000, "img/1704.jpg"],
             ["18/04/2026", "Móvil 3", 100000, "img/transfe1704.jpg"],
             ["20/04/2026", "Móvil 3", 100000, "img/2004.jpg"],
-            ["21/04/2026", "Móvil 3", 130000, "img/TTT.jpg"]
+            ["21/04/2026", "Móvil 3", 130000, "img/TTT.jpg"],
+            ["22/04/2026", "Móvil 3", 100000, "img/086.jpg"],
+            ["22/04/2026", "Móvil 3", 100000, "img/0944.jpg"],
+            ["24/04/2026", "Móvil 3", 100000, "img/044.jpg"],
+            ["24/04/2026", "Móvil 3", 100000, "img/045.jpg"],
+            ["27/04/2026", "Móvil 3", 100000, "img/0049.jpg"],
+            ["28/04/2026", "Móvil 3", 150000, "img/0063.jpg"]
           ]
         },
         {
@@ -170,14 +215,64 @@
           "color": "verde",
           "items": [
             ["08/04/2026", "Maria Guadalupe Portillo", 70000, "img/compro (1).jpg"],
-            ["16/04/2026", "Maria Guadalupe Portillo", 100000, ""]
+            ["16/04/2026", "Maria Guadalupe Portillo", 100000, "img/090.jpg"],
+            ["24/04/2026", "Maria Guadalupe Portillo", 100000, "img/092.jpg"],
+            ["30/04/2026", "Maria Guadalupe Portillo", 100000, "img/0016.jpg"]
           ]
         }
       ]
     };
-
-  
   </script>
+
   <script src="app.js"></script>
+
+  <script>
+    function agregarResumenAdelantos() {
+      const categoria = window.APP_DATA.categorias.find(
+        c => c.nombre === "Adelantos mes de abril"
+      );
+
+      if (!categoria) return;
+
+      const totales = {};
+
+      categoria.items.forEach(item => {
+        let nombre = item[1]
+          .replace("Vale", "")
+          .split("/")[0]
+          .trim();
+
+        if (!totales[nombre]) {
+          totales[nombre] = 0;
+        }
+
+        totales[nombre] += item[2];
+      });
+
+      const resumen = document.createElement("div");
+      resumen.className = "resumen-adelantos";
+
+      resumen.innerHTML = `
+        <h4>Total de adelantos por persona</h4>
+        ${Object.entries(totales).map(([persona, total]) => `
+          <div class="resumen-item">
+            <span>${persona}</span>
+            <strong>${total.toLocaleString("es-PY")} Gs.</strong>
+          </div>
+        `).join("")}
+      `;
+
+      const cards = document.querySelectorAll("#cards > *");
+      const cardAdelantos = Array.from(cards).find(card =>
+        card.textContent.includes("Adelantos mes de abril")
+      );
+
+      if (cardAdelantos) {
+        cardAdelantos.appendChild(resumen);
+      }
+    }
+
+    window.addEventListener("load", agregarResumenAdelantos);
+  </script>
 </body>
 </html>
